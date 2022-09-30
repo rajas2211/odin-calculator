@@ -1,0 +1,44 @@
+body{
+    height: 100%;
+    text-align: center;
+
+}
+
+.calculator-container{
+    width: 50%;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    /* width:auto; */
+}
+
+.display-container{
+    flex:1;
+    display: flex;
+}
+.display-container>input{
+    flex:1;
+}
+
+.buttons-container{
+    display: flex;
+}
+
+.numbers-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex:3;
+    gap: 5px;
+}
+
+button.number{
+    width:30%;
+}
+
+.operators-container{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    gap: 5px;
+}
