@@ -190,3 +190,22 @@ executeButton.addEventListener("click", (e) => {
     display.value=String(resArray);
     displayIsResult = true;
 })
+
+function pressButton(buttonId){
+    const button = document.querySelector(`#${buttonId}`);
+    button.click();
+}
+
+
+const keyPressed = document.addEventListener("keyup", (e) => {
+    const key = e.key;
+    if(parseFloat(e.key)) pressButton(`num-${e.key}`);
+    else if(e.key == '.') pressButton(`period`);
+    else if(/^[+\-*\/]$/.test(e.key)) {
+        const operatorDict = [{'+': 'Plus'}, {'-': 'Minus'}, {'*': 'Multiply'}, {'/': 'Divide'}];
+        const operator = operatorDict.filter((operator) => e.key in operator);
+        // console.log(operator[0][e.key]);
+        pressButton(`operator${operator[0][e.key]}`)
+    } else if(e.key == '=' || e.key == 'Enter') pressButton(`evaluate`);
+    // console.log(e);
+});
