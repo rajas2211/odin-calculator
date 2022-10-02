@@ -11,8 +11,9 @@
 <body>
     <h1>Let's Math!</h1>
     <div class="calculator-container">
+        <!-- <div class="max-length" hidden>Display limit reached! Use backspace!</div> -->
         <div class="display-container">
-            <input type="text" name="display" id="display" value="">
+            <input maxlength="5" type="text" name="display" id="display" value="" disabled>
         </div>
         <div class="buttons-container">
             <div class="numbers-container">
@@ -30,13 +31,13 @@
                 <button class="number" id="period" value=".">.</button>
             </div>
             <div class="operators-container">
-                <button class="operator expression" id="operatorPlus" value="+">+</button>
+                <button class="operator" id="backspace" value="backspace">&larr;</button>
+                <button class="operator expression" id="operatorPlus" value="+">+</button> 
                 <button class="operator expression" id="operatorMinus" value="-">-</button>
                 <button class="operator expression" id="operatorMultiply" value="*">*</button>
                 <button class="operator expression" id="operatorDivide" value="/">/</button>
                 <button class="operator" id="evaluate" value="=">=</button>
-            </div>
-            
+            </div>   
         </div>
     </div>
 </body>

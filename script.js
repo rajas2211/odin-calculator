@@ -4,8 +4,11 @@ const clearButton = document.querySelector("button#C");
 const periodButton = document.querySelector("button#period");
 const zeroButton = document.querySelector("button#num-0");
 const executeButton = document.querySelector("button#evaluate");
+const backspaceButton = document.querySelector("button#backspace");
 const display = document.querySelector("#display");
 const ERRORTEXT = "Can't let you do that";
+// const MAXDISPLAY = 22;
+// const maxLength = document.querySelector('.max-length');
 let displayIsResult = false;
 
 function add(num1, num2){
@@ -86,8 +89,28 @@ function getLastExpressionEntry(){
    return  getDisplayArray().slice(-1);
 }
 
+function pressButton(buttonId){
+    const button = document.querySelector(`#${buttonId}`);
+    button.click();
+}
+
+// function maxLengthCheck (displayBox=display){
+//     if (displayBox.length == MAXDISPLAY){
+//         numberButtons.forEach((button) => {
+//             button.setAttribute("disabled", "");
+//         });
+//         operatorButtons.forEach((button) => {
+//             button.setAttribute("disabled", "");
+//         });
+//         maxLength.removeAttribute("hidden");
+//         return true;
+//     }
+//     return false;
+// }
+
 numberButtons.forEach(button => {
     button.addEventListener("click", (e) => {
+    // if(maxLengthCheck()) return;
     if(displayIsResult) {
         clearDisplayText();
     }
@@ -125,7 +148,8 @@ operatorButtons.forEach(button =>{
         } else if(lastExpression == '-') {
             if(operator != '-'){
                 const displayArray = getDisplayArray();
-                displayArray.pop();
+                // displayArray.pop();
+                displayArray.splice(-1, 1, '');
                 updateDisplayFromArray(displayArray);
                 if(operator != '+' && getDisplayArray().length>1){
                     changeOperator(operator);
@@ -160,7 +184,7 @@ periodButton.addEventListener("click", (e) => {
 });
 
 executeButton.addEventListener("click", (e) => {
-    let resArray = getDisplayArray()
+    let resArray = getDisplayArray();
     if (resArray[resArray.length -1] == '' ||
         resArray[resArray.length -1] == '-'){
             return;
@@ -187,25 +211,45 @@ executeButton.addEventListener("click", (e) => {
             break;
         }
     }
-    display.value=String(resArray);
+    if(Number.isInteger(parseFloat(resArray)) || isNaN(parseFloat(resArray))){
+        display.value=String(resArray);
+    } else {
+        display.value=String(parseFloat(resArray).toFixed(3));
+    }
+    // display.value=String(resArray);
     displayIsResult = true;
-})
+});
 
-function pressButton(buttonId){
-    const button = document.querySelector(`#${buttonId}`);
-    button.click();
-}
+backspaceButton.addEventListener("click", (e) => {
+    if(displayIsResult) {
+        clearDisplayText();
+        return;
+    }
+    const displayArray = getDisplayArray();
+    let lastExpression = String(displayArray.slice(-1));
+    if(!isNaN(parseFloat(lastExpression))){
+        displayArray.splice(-1,1,lastExpression.slice(0,-1));
+        updateDisplayFromArray(displayArray);
+        return;
+    } else if(lastExpression == ''){
+        displayArray.splice(-2, 2);
+        updateDisplayFromArray(displayArray);
+    } else if(lastExpression == '-' || lastExpression == '.'){
+        displayArray.splice(-1, 1, '');
+        updateDisplayFromArray(displayArray);
+    }
+});
+
 
 
 const keyPressed = document.addEventListener("keyup", (e) => {
-    const key = e.key;
-    if(parseFloat(e.key)) pressButton(`num-${e.key}`);
+    if(parseFloat(e.key) || e.key == '0') pressButton(`num-${e.key}`);
     else if(e.key == '.') pressButton(`period`);
     else if(/^[+\-*\/]$/.test(e.key)) {
         const operatorDict = [{'+': 'Plus'}, {'-': 'Minus'}, {'*': 'Multiply'}, {'/': 'Divide'}];
         const operator = operatorDict.filter((operator) => e.key in operator);
-        // console.log(operator[0][e.key]);
         pressButton(`operator${operator[0][e.key]}`)
     } else if(e.key == '=' || e.key == 'Enter') pressButton(`evaluate`);
-    // console.log(e);
+    else if(e.key == 'Backspace' || e.key == 'Delete') pressButton(`backspace`);
 });
+
